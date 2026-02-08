@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DARKSALE / 2026</title>
+    
+    <title>DARKSALE — Магазин архивной одежды / 2026</title>
+    <meta name="description" content="DARKSALE — эксклюзивный архивный магазин. Уникальные вещи, деконструкция и селективный выбор одежды. Archive Unit Unit_00.">
+    <meta name="keywords" content="darksale, darkwear, archive clothing, магазин одежды, купить архивные вещи, брендовая одежда">
+    <meta name="author" content="DARKSALE">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="DARKSALE / Archive Store">
+    <meta property="og:description" content="Deconstructive / Selective Archive Unit.">
+    <meta property="og:image" content="https://i.postimg.cc/fbFp49Fc/Photoroom-20260130-225625.jpg">
+    <meta property="og:type" content="website">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
@@ -14,7 +25,7 @@
         .product-card img { filter: grayscale(1) contrast(1.2); transition: all 0.4s ease; opacity: 0.7; }
         .product-card:hover img:not(.sold-img) { filter: grayscale(0) contrast(1); opacity: 1; }
         .sold-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10; pointer-events: none; }
-        .sold-badge { border: 1px solid red; color: red; padding: 5px 15px; font-size: 14px; font-bold; transform: rotate(-15deg); text-transform: uppercase; letter-spacing: 2px; }
+        .sold-badge { border: 1px solid red; color: red; padding: 5px 15px; font-size: 14px; font-weight: bold; transform: rotate(-15deg); text-transform: uppercase; letter-spacing: 2px; }
         .sold-img { opacity: 0.2 !important; filter: grayscale(1) blur(2px) !important; }
         .modal { display: none; background: rgba(0,0,0,0.98); }
         .pay-input { background: #0a0a0a; border: 1px solid #333; color: white; width: 100%; padding: 15px; outline: none; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; }
@@ -22,6 +33,7 @@
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
+
 <body class="p-4 md:p-10">
 
     <div class="fixed top-4 left-4 z-50 text-[10px] opacity-20 uppercase tracking-widest">Archive Unit / Unit_00</div>
