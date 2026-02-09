@@ -196,47 +196,7 @@
             <div class="text-[15vw] font-bold opacity-5 leading-none select-none pointer-events-none">2026</div>
         </div>
     </footer>
-
-    <script>
-        let cart = []; let currentProduct = null; let currentImgIdx = 0;
-        function openModal(index) { 
-            currentProduct = products[index]; currentImgIdx = 0; updateSlider(); 
-            document.getElementById('modalTitle').innerText = currentProduct.ref; 
-            document.getElementById('modalPrice').innerText = currentProduct.price;
-            document.getElementById('modalDesc').innerText = currentProduct.desc;
-            document.getElementById('modalSize').innerText = currentProduct.size;
-            document.getElementById('productModal').style.display = 'flex'; 
-        }
-        function updateSlider() { document.getElementById('sliderImg').src = currentProduct.images[currentImgIdx]; document.getElementById('imageCounter').innerText = `${currentImgIdx + 1} / ${currentProduct.images.length}`; }
-        function nextImg() { currentImgIdx = (currentImgIdx + 1) % currentProduct.images.length; updateSlider(); }
-        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
-        function toggleCart() { const s = document.getElementById('cartSidebar'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
-        function addToCart() { cart.push({ ...currentProduct, cartId: Date.now() }); updateCartUI(); closeModal(); }
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const container = document.getElementById('cartItems'); let total = 0;
-            if (cart.length === 0) { container.innerHTML = '<div class="text-[10px] opacity-20">EMPTY</div>'; document.getElementById('cart-total').innerText = '0$'; return; }
-            container.innerHTML = cart.map(item => { total += parseFloat(item.price); return `<div class="flex justify-between mb-4 border-b border-zinc-900 pb-2"><div class="text-[10px] uppercase">${item.ref}</div><div class="text-[10px]">${item.price}</div></div>`; }).join('');
-            document.getElementById('cart-total').innerText = total + (cart[0].price.includes('€') ? '€' : '$');
-        }
-        function openCheckout() { if (cart.length === 0) return; document.getElementById('checkoutModal').style.display = 'flex'; document.getElementById('finalPrice').innerText = document.getElementById('cart-total').innerText; toggleCart(); }
-        function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; document.getElementById('step1').style.display = 'block'; document.getElementById('step2').style.display = 'none'; document.getElementById('tgAction').classList.add('hidden'); document.getElementById('payBtn').classList.remove('hidden'); }
-        function nextStep() { if(document.getElementById('clientName').value) { document.getElementById('step1').style.display = 'none'; document.getElementById('step2').style.display = 'block'; } }
-        function prevStep() { document.getElementById('step1').style.display = 'block'; document.getElementById('step2').style.display = 'none'; }
-        function processPayment() {
-            const btn = document.getElementById('payBtn'); const tgAction = document.getElementById('tgAction');
-            btn.innerText = "ПРОВЕРКА..."; btn.disabled = true;
-            setTimeout(() => {
-                const name = document.getElementById('clientName').value;
-                const addr = document.getElementById('clientAddress').value;
-                const contact = document.getElementById('clientContact').value;
-                const items = cart.map(i => i.ref).join(', ');
-                const total = document.getElementById('finalPrice').innerText;
-                const msg = `✅ ЗАКАЗ ОПЛАЧЕН\n\nИмя: ${name}\nАдрес: ${addr}\nТГ: ${contact}\nТовары: ${items}\nСумма: ${total}\nОплата: Monobank`;
-                document.getElementById('tgLink').href = `https://t.me/yamusulmaninsalam?text=${encodeURIComponent(msg)}`;
-                btn.classList.add('hidden'); tgAction.classList.remove('hidden');
-            }, 1500);
-        }
-    </script>
+    
+    <script src="script.js"></script>
 </body>
 </html>
