@@ -108,7 +108,7 @@ button:active { transform: scale(0.95); transition: 0.1s; }
                         <div class="w-full aspect-video overflow-hidden bg-zinc-950 mb-4 border border-zinc-900">
                             <img src="${p.images[0]}" class="w-full h-full object-contain ${isSold ? 'sold-img' : ''}">
                         </div>
-                        <button ${isSold ? 'disabled' : `onclick="openModal(${index})"`} class="text-[10px] uppercase ${isSold ? 'opacity-20 cursor-not-allowed' : 'hover:line-through'}">
+                        <button ${isSold ? : `onclick="openModal(${index})"`} class="text-[10px] uppercase ${isSold ? 'opacity-20 cursor-not-allowed' : 'hover:line-through'}">
                             ${isSold ? 'Продано' : 'Просмотр'}
                         </button>
                     </div>
