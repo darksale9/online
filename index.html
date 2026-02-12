@@ -66,42 +66,78 @@ button:active { transform: scale(0.95); transition: 0.1s; }
         </div>
     </header>
 
-    <section id="buy" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-60">
-        <script>
-            const products = [
-                { 
-                    id: 0, 
-                    ref: '"Blackline" Waxed jeans', 
-                    price: '35€', 
-                    sold: true, 
-                    desc: 'Custom waxed denim with reinforced stitching and industrial hardware.',
-                    size: 'W30 L32 | Waist: 40cm, Length: 105cm, Leg Opening: 19cm',
-                    images: ['https://i.postimg.cc/fbFp49Fc/Photoroom-20260130-225625.jpg', 'https://i.postimg.cc/tTnTyFgZ/Photoroom-20260130-225839.jpg', 'https://i.postimg.cc/RV4MpkwV/Photoroom-20260130-225800.jpg'] 
-                },
-                { 
-                    id: 1, 
-                    ref: 'Boots', 
-                    price: '30€', 
-                    sold: true, 
-                    desc: 'Military-inspired boots, heavy duty sole, distressed leather finish.',
-                    size: '42 EU | Insole length: 27.5cm',
-                    images: ['https://i.postimg.cc/0NdnnJvk/Photoroom-20260128-141222.jpg', 'https://i.postimg.cc/2jXw0Dsw/Photoroom-20260128-141126.jpg','https://i.postimg.cc/GpQPGwPk/Photoroom-20260128-141154.jpg'] 
-                },
-                { id: 2, ref: 'Cross hat', price: '550 uah |10€', sold: true, desc: 'Сделана из приятной вязаной ткани с нашитым мелкими швами крестом.Длинная и практичная на каждый день,эксклюзивный элемент.', size: 'One Size', images: ['https://i.postimg.cc/4d25BspB/Photoroom-20260121-135030.jpg'] },
-                { id: 3, ref: 'Leather portmone', price: '11€', sold: false, desc: 'Натуральная синяя кожа, приятная на ощупь .На боках футуристичные следы использования,придающие «окисленный» эффект.Много отсеков для карт и купюр ,слот под документ .Сделано в Берлине', size: 'One Size', images: ['https://i.postimg.cc/gk710jHf/Photoroom-20260207-162916.jpg','https://i.postimg.cc/J762T0vG/Photoroom-20260207-162947.jpg'] },
-                { id: 4, ref: 'UNIT_05', price: '140$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 5, ref: 'UNIT_06', price: '160$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 6, ref: 'UNIT_07', price: '125$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 7, ref: 'UNIT_08', price: '145$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 8, ref: 'UNIT_09', price: '135$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 9, ref: 'UNIT_10', price: '155$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 10, ref: 'UNIT_11', price: '170$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] },
-                { id: 11, ref: 'UNIT_12', price: '180$', sold: false, desc: 'Limited Archive Unit.', size: 'One Size', images: ['https://i.postimg.cc/pT4By6p9/image.png'] }
-            ];
+<section id="buy" class="flex justify-center mb-60">
+    <script>
+        const products = [
+            { 
+                id: 0, 
+                ref: 'UNIT_01 / ARCHIVE', 
+                price: '100$', 
+                sold: false, 
+                desc: 'Limited Archive Unit. Deconstructed design.', 
+                size: 'One Size', 
+                images: [
+                    'https://i.postimg.cc/pT4By6p9/image.png',
+                    'https://i.postimg.cc/fbFp49Fc/Photoroom-20260130-225625.jpg',
+                    'https://i.postimg.cc/tTnTyFgZ/Photoroom-20260130-225839.jpg',
+                    'https://i.postimg.cc/RV4MpkwV/Photoroom-20260130-225800.jpg',
+                    'https://i.postimg.cc/0NdnnJvk/Photoroom-20260128-141222.jpg',
+                    'https://i.postimg.cc/2jXw0Dsw/Photoroom-20260128-141126.jpg'
+                ] 
+            }
+        ];
 
-            products.forEach((p, index) => {
-                const isSold = p.sold;
-                document.write(`
+        let currentSlide = 0;
+        
+        // Глобальная функция для смены слайдов
+        window.changeSlide = function(direction) {
+            const total = products[0].images.length;
+            currentSlide = (currentSlide + direction + total) % total;
+
+            const track = document.getElementById('slider-track');
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            document.getElementById('slide-counter').innerText = `${currentSlide + 1} / ${total}`;
+        };
+
+        const p = products[0];
+        const isSold = p.sold;
+
+        document.write(`
+            <div class="product-card border border-zinc-900 p-2 w-full max-w-[400px] relative group">
+                ${isSold ? '<div class="sold-overlay"><div class="sold-badge">SOLD OUT</div></div>' : ''}
+                
+                <div class="flex justify-between items-end mb-2 text-[8px] opacity-40 uppercase tracking-widest">
+                    <span>REF: ${p.ref}</span>
+                    <span id="slide-counter">1 / ${p.images.length}</span>
+                </div>
+
+                <div class="relative w-full aspect-[3/4] overflow-hidden bg-zinc-950 mb-4 border border-zinc-900">
+                    <div id="slider-track" class="flex w-full h-full transition-transform duration-500 ease-out">
+                        ${p.images.map(img => `
+                            <div class="w-full h-full flex-shrink-0">
+                                <img src="${img}" class="w-full h-full object-cover ${isSold ? 'sold-img' : ''}">
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    ${!isSold ? `
+                        <button onclick="window.changeSlide(-1)" class="absolute left-0 top-0 bottom-0 px-4 opacity-0 group-hover:opacity-100 hover:bg-black/40 text-white transition-all">←</button>
+                        <button onclick="window.changeSlide(1)" class="absolute right-0 top-0 bottom-0 px-4 opacity-0 group-hover:opacity-100 hover:bg-black/40 text-white transition-all">→</button>
+                    ` : ''}
+                </div>
+
+                <div class="flex justify-between items-center mt-2 border-t border-zinc-900 pt-2">
+                    <span class="text-xs font-bold">${p.price}</span>
+                    <button ${isSold ? '' : 'onclick="openModal(0)"'} class="text-[10px] uppercase ${isSold ? 'opacity-20' : 'hover:underline'}">
+                        ${isSold ? 'Продано' : 'Купить'}
+                    </button>
+                </div>
+            </div>
+        `);
+    </script>
+</section>
+
                     <div class="product-card border border-zinc-900 p-2">
                         ${isSold ? '<div class="sold-overlay"><div class="sold-badge">SOLD OUT</div></div>' : ''}
                         <div class="text-[8px] mb-2 opacity-20 uppercase">REF: ${p.ref}</div>
