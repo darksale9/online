@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARKSALE — Магазин архивной одежды / 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono&family=Herr+Von+Muellerhoff&display=swap');
+        
+        body { background-color: #000; color: #fff; font-family: 'Space Mono', monospace; -webkit-font-smoothing: antialiased; }
+
+        .gallery-text { 
+            font-family: 'Herr Von Muellerhoff', cursive; 
+            font-size: 4rem; color: rgba(255,255,255,0.85); 
+            margin-top: -50px; margin-left: 20px; 
+            pointer-events: none; position: relative; z-index: 20; 
+        }
+
+        .nav-link { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; transition: 0.3s; opacity: 0.5; cursor: pointer; }
+        .nav-link:hover { opacity: 1; padding-left: 10px; }
+
+        .product-card img { filter: grayscale(1) contrast(1.2); transition: all 0.4s ease; opacity: 0.7; }
+        .product-card:hover img:not(.sold-img) { filter: grayscale(0) contrast(1); opacity: 1; }
+
+        .pay-input { background: #0a0a0a; border: 1px solid #333; color: white; width: 100%; padding: 15px; outline: none; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; }
+        .mono-card { background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); border: 1px solid #333; border-radius: 12px; padding: 20px; }
+        
+        ::-webkit-scrollbar { display: none; }
+
+        .sold-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10; pointer-events: none; }
+        .sold-badge { border: 1px solid red; color: red; padding: 5px 15px; font-size: 14px; font-weight: bold; transform: rotate(-15deg); text-transform: uppercase; }
+
+        .header-video-bg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            min-width: 100%; min-height: 100%; width: auto; height: auto;
+            z-index: 0; object-fit: cover; opacity: 0.4; filter: grayscale(1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <nav class="fixed top-10 right-10 z-50 flex flex-col items-end gap-4 text-right">
+        <a href="#home" class="nav-link">Главная</a>
+        <a href="#buy" class="nav-link">Купить</a>
+        <a href="#contacts" class="nav-link">Контакты</a>
+        <button onclick="toggleCart()" class="nav-link mt-4 border border-zinc-800 p-2">CART (<span id="cart-count">0</span>)</button>
+    </nav>
+
+    <header id="home" class="mb-40 pt-20 relative overflow-hidden h-[400px] flex flex-col justify-center">
+        <video autoplay muted loop playsinline class="header-video-bg">
+            <source src="https://files.catbox.moe/9wviqg.mov" type="video/quicktime">
+            <source src="https://files.catbox.moe/9wviqg.mov">
+        </video>
+        <h1 class="text-7xl md:text-[12rem] font-bold tracking-tighter leading-none uppercase relative z-10">Darksale</h1>
+        <div class="gallery-text">Gallery</div> 
+        <div class="flex justify-between items-end mt-4 relative z-10">
+            <span class="text-[10px] opacity-30 uppercase">EST. 2025</span>
+            <span class="text-[10px] opacity-30 text-right uppercase">Deconstructive / Selective</span>
+        </div>
+    </header>
+
+    <section id="buy" class="flex justify-center mb-60">
+        <script>
+            let cart = [];
+            const product = { 
+                id: 0, 
+                ref: 'Blackline Waxed slim denim', 
+                price: '40€ | 2000 UAH', // Просто меняй текст здесь
+                sold: false, 
+                desc: 'Anatomical siluete, crowded with dark glossy wax and combined with a different size buttons. All pairs is 1/1! You can also order it for you own measurements.', 
+                images: [
+                    'https://i.postimg.cc/76svgcTk/Photoroom-20260213-172336.jpg',
+                    'https://i.postimg.cc/y62RjNKT/Photoroom-20260213-172420.jpg',
+                    'https://i.postimg.cc/0y0J9dwd/Photoroom-20260213-172501.jpg',
+                    'https://i.postimg.cc/tJ6Ywhb3/Photoroom-20260213-172551.jpg',
+                    'https://i.postimg.cc/V6r60jJy/IMG-4796.jpg',
+                    'https://i.postimg.cc/mgm2dd9p/IMG-4798.jpg'
+                ] 
+            };
+
+            let currentSlide = 0;
+            let modalSlide = 0;
+
+            // Функция извлечения числа из любой строки (берет первое число)
+            function extractPrice(str) {
+                const match = str.match(/\d+/);
+                return match ? parseInt(match[0]) : 0;
+            }
+
+            window.changeImg = function(e, dir) {
+                e.stopPropagation();
+                const total = product.images.length;
+                currentSlide = (currentSlide + dir + total) % total;
+                document.getElementById('slider-track').style.transform = `translateX(-${currentSlide * 100}%)`;
+                document.getElementById('slide-counter').innerText = `${currentSlide + 1} / ${total}`;
+            };
+
+            document.write(`
+                <div class="product-card border border-zinc-900 p-3 w-full max-w-[500px] relative group">
+                    ${product.sold ? '<div class="sold-overlay"><div class="sold-badge">SOLD OUT</div></div>' : ''}
+                    <div class="flex justify-between items-end mb-2 text-[8px] opacity-40 uppercase tracking-widest">
+                        <span>REF: ${product.ref}</span>
+                        <span id="slide-counter">1 / ${product.images.length}</span>
+                    </div>
+                    <div class="relative aspect-video overflow-hidden bg-zinc-950 border border-zinc-900 mb-4">
+                        <div id="slider-track" class="flex h-full transition-transform duration-500 ease-out">
+                            ${product.images.map(img => `<img src="${img}" class="w-full h-full object-contain flex-shrink-0">`).join('')}
+                        </div>
+                        <button onclick="changeImg(event, -1)" class="absolute left-0 top-0 h-full px-4 hover:bg-white/5 transition z-30">←</button>
+                        <button onclick="changeImg(event, 1)" class="absolute right-0 top-0 h-full px-4 hover:bg-white/5 transition z-30">→</button>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-zinc-900 pt-3">
+                        <span class="font-bold">${product.price}</span>
+                        <button onclick="openModal(0)" class="text-[10px] uppercase border border-white/20 px-6 py-2 hover:bg-white hover:text-black transition relative z-40">Просмотр</button>
+                    </div>
+                </div>
+            `);
+        </script>
+    </section>
+
+    <div id="productModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95" style="display: none;">
+        <div class="max-w-5xl w-full bg-black border border-zinc-900 p-6 relative text-white">
+            <button onclick="closeModal()" class="absolute -top-10 right-0 uppercase text-[10px]">Close ✕</button>
+            <div class="relative aspect-video bg-zinc-950 mb-6 border border-zinc-900 overflow-hidden cursor-pointer" onclick="nextModalImg()">
+                <img id="modalImg" src="" class="w-full h-full object-contain transition-opacity duration-300">
+                <div class="absolute bottom-4 left-4 text-[10px] bg-black/80 px-2 py-1 opacity-50" id="modalCounter">1 / 6</div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between gap-6">
+                <div>
+                    <h2 id="modalTitle" class="text-3xl font-bold uppercase tracking-tighter"></h2>
+                    <p id="modalDesc" class="text-[12px] opacity-60 mt-2 max-w-md"></p>
+                </div>
+                <div class="text-right">
+                    <div id="modalPrice" class="text-2xl mb-4 font-bold"></div>
+                    <button onclick="addToCart()" class="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase hover:bg-zinc-300 transition">В корзину</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cartSidebar" class="fixed inset-0 z-[100] flex justify-end bg-black/80" style="display: none;">
+        <div class="w-full md:w-96 bg-black border-l border-zinc-800 p-8 flex flex-col text-white">
+            <div class="flex justify-between items-center mb-10 text-[10px] uppercase tracking-widest">
+                <span>Your Cart</span>
+                <button onclick="toggleCart()">✕</button>
+            </div>
+            <div id="cartItems" class="flex-1 overflow-y-auto space-y-4"></div>
+            <div class="border-t border-zinc-900 pt-6 mt-6">
+                <div class="flex justify-between text-xs mb-6 uppercase"><span>Total:</span><span id="cart-total">0</span></div>
+                <button onclick="openCheckout()" class="w-full bg-white text-black py-4 text-[10px] font-bold uppercase">Оформить заказ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/95 text-white" style="display: none;">
+        <div class="w-full max-w-md bg-black border border-zinc-800 p-8 relative">
+            <button onclick="closeCheckout()" class="absolute top-4 right-4 opacity-30">✕</button>
+            <div id="step1">
+                <h2 class="text-xl font-bold uppercase mb-6 text-center tracking-widest">CHECKOUT</h2>
+                <input type="text" id="clientName" class="pay-input" placeholder="ФИО ПОЛУЧАТЕЛЯ">
+                <input type="text" id="clientAddress" class="pay-input" placeholder="ГОРОД / ОТДЕЛЕНИЕ">
+                <input type="text" id="clientContact" class="pay-input" placeholder="ВАШ ТЕЛЕГРАМ">
+                <button onclick="nextStep()" class="w-full bg-white text-black py-4 text-[11px] font-bold uppercase mt-4">ПЕРЕЙТИ К ОПЛАТЕ</button>
+            </div>
+            <div id="step2" style="display:none;">
+                <div class="text-center mb-6"><div id="finalPrice" class="text-4xl font-bold">0</div></div>
+                <div class="mono-card mb-6 text-center">
+                    <div class="font-mono text-xl mb-4">4441 1111 4254 9207</div>
+                    <div class="flex justify-between text-[9px] opacity-40 uppercase px-4"><span>LEV P.</span><span>monobank</span></div>
+                </div>
+                <button onclick="processPayment()" class="w-full bg-white text-black py-4 text-[11px] font-bold uppercase mb-4">Я ОПЛАТИЛ</button>
+                <button onclick="prevStep()" class="w-full text-[9px] opacity-30 uppercase">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contacts" class="border-t border-zinc-900 pt-20 mt-40">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
+            <div>
+                <div class="text-[10px] opacity-20 uppercase mb-4 tracking-widest">Email Support</div>
+                <a href="mailto:bylevponomarenko@gmail.com" class="text-xl md:text-3xl underline decoration-zinc-800">bylevponomarenko@gmail.com</a>
+            </div>
+            <div>
+                <div class="text-[10px] opacity-20 uppercase mb-4 tracking-widest">Community</div>
+                <a href="https://t.me/tgkpezdi" target="_blank" class="text-xl md:text-3xl underline decoration-zinc-800 uppercase">TG CHANNEL</a>
+            </div>
+        </div>
+        <div class="flex justify-between items-baseline py-10">
+            <div class="text-[8px] opacity-20 uppercase tracking-tighter">© DARKSALE ALL RIGHTS RESERVED / NO REFUNDS</div>
+            <div class="text-[15vw] font-bold opacity-5 leading-none select-none pointer-events-none">2026</div>
+        </div>
+    </footer>
+
+    <script>
+        function openModal(id) {
+            modalSlide = 0;
+            updateModalImg();
+            document.getElementById('modalTitle').innerText = product.ref;
+            document.getElementById('modalDesc').innerText = product.desc;
+            document.getElementById('modalPrice').innerText = product.price;
+            document.getElementById('productModal').style.display = 'flex';
+        }
+        function nextModalImg() { modalSlide = (modalSlide + 1) % product.images.length; updateModalImg(); }
+        function updateModalImg() {
+            document.getElementById('modalImg').src = product.images[modalSlide];
+            document.getElementById('modalCounter').innerText = `${modalSlide + 1} / ${product.images.length}`;
+        }
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
+        function toggleCart() {
+            const side = document.getElementById('cartSidebar');
+            side.style.display = (side.style.display === 'none') ? 'flex' : 'none';
+        }
+
+        function addToCart() {
+            cart.push({...product});
+            updateCartUI();
+            closeModal();
+            toggleCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItems');
+            document.getElementById('cart-count').innerText = cart.length;
+            list.innerHTML = cart.map((item, i) => `
+                <div class="flex justify-between items-center border-b border-zinc-900 pb-4">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.images[0]}" class="w-10 h-10 object-cover">
+                        <div class="text-[10px] uppercase font-bold">${item.ref}</div>
+                    </div>
+                    <button onclick="removeFromCart(${i})" class="text-[9px] text-red-600 uppercase">Удалить</button>
+                </div>
+            `).join('');
+            
+            // Считаем сумму, вытягивая цифры из строки
+            const total = cart.reduce((s, item) => s + extractPrice(item.price), 0);
+            document.getElementById('cart-total').innerText = total + (product.price.includes('€') ? '€' : '$');
+        }
+
+        function openCheckout() { if(cart.length > 0) document.getElementById('checkoutModal').style.display = 'flex'; }
+        function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; }
+        function nextStep() {
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('finalPrice').innerText = document.getElementById('cart-total').innerText;
+        }
+        function prevStep() { 
+            document.getElementById('step1').style.display = 'block'; 
+            document.getElementById('step2').style.display = 'none'; 
+        }
+
+        function processPayment() {
+            const name = document.getElementById('clientName').value;
+            const address = document.getElementById('clientAddress').value;
+            const contact = document.getElementById('clientContact').value;
+            const price = document.getElementById('cart-total').innerText;
+            const items = cart.map(item => item.ref).join(', ');
+            const message = `ЗАКАЗ: ${items}\nСУММА: ${price}\n\nДАННЫЕ:\nФИО: ${name}\nАДРЕС: ${address}\nТГ: ${contact}`;
+            window.open(`https://t.me/yamusulmaninsalam?text=${encodeURIComponent(message)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
